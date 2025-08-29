@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="max-w-2xl mx-auto">
+        <h1 class="text-3xl font-bold text-dark mb-8">
+            {% if event %}Modifier l'événement{% else %}Nouvel événement{% endif %}
+        </h1>
+
+        <form method="POST" class="bg-white rounded-2xl shadow-md p-6 space-y-6">
+            <div class="space-y-2">
+                <label for="name" class="block text-sm font-medium text-dark">Nom de l'événement</label>
+                <input type="text" 
+                       name="name" 
+                       id="name" 
+                       value="{{ event[1] if event else '' }}"
+                       class="w-full px-4 py-2 rounded-xl border border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary focus:ring-opacity-50 transition duration-300"
+                       required>
+            </div>
+
+            <div class="space-y-2">
+                <label for="date" class="block text-sm font-medium text-dark">Date</label>
+                <input type="date" 
+                       name="date" 
+                       id="date" 
+                       value="{{ event[2] if event else '' }}"
+                       class="w-full px-4 py-2 rounded-xl border border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary focus:ring-opacity-50 transition duration-300"
+                       required>
+            </div>
+
+            <div class="space-y-2">
+                <label for="location" class="block text-sm font-medium text-dark">Lieu</label>
+                <input type="text" 
+                       name="location" 
+                       id="location" 
+                       value="{{ event[3] if event else '' }}"
+                       class="w-full px-4 py-2 rounded-xl border border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary focus:ring-opacity-50 transition duration-300"
+                       required>
+            </div>
+
+            <div class="space-y-2">
+                <label for="organizer_id" class="block text-sm font-medium text-dark">Organisateur</label>
+                <select name="organizer_id" 
+                        id="organizer_id"
+                        class="w-full px-4 py-2 rounded-xl border border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary focus:ring-opacity-50 transition duration-300"
+                        required>
+                    <option value="">Sélectionnez un organisateur</option>
+                    {% for organizer in organizers %}
+                    <option value="{{ organizer[0] }}" {% if event and event[5] == organizer[0] %}selected{% endif %}>
+                        {{ organizer[1] }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="space-y-2">
+                <label for="description" class="block text-sm font-medium text-dark">Description</label>
+                <textarea name="description" 
+                          id="description" 
+                          rows="4"
+                          class="w-full px-4 py-2 rounded-xl border border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary focus:ring-opacity-50 transition duration-300">{{ event[4] if event else '' }}</textarea>
+            </div>
+
+            <div class="flex justify-end space-x-4">
+                <a href="{{ url_for('events') }}"
+                   class="px-4 py-2 bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-200 transition duration-300">
+                    Annuler
+                </a>
+                <button type="submit"
+                        class="px-4 py-2 bg-primary text-white rounded-xl hover:bg-secondary transition duration-300">
+                    {% if event %}Mettre à jour{% else %}Créer{% endif %}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

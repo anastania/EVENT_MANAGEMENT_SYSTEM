@@ -1,0 +1,160 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <!-- En-tête -->
+    <h1 class="text-3xl font-bold text-dark mb-8">Tableau de bord</h1>
+
+    <!-- Cartes de statistiques -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div class="bg-white rounded-2xl shadow-md p-6">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-neutral">Total Événements</p>
+                    <h3 class="text-2xl font-bold text-dark">{{ total_events }}</h3>
+                </div>
+                <div class="p-3 bg-primary bg-opacity-10 rounded-xl">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-primary" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-2xl shadow-md p-6">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-neutral">Total Participants</p>
+                    <h3 class="text-2xl font-bold text-dark">{{ total_attendees }}</h3>
+                </div>
+                <div class="p-3 bg-accent bg-opacity-10 rounded-xl">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-accent" viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-2xl shadow-md p-6">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-sm text-neutral">Total Organisateurs</p>
+                    <h3 class="text-2xl font-bold text-dark">{{ total_organizers }}</h3>
+                </div>
+                <div class="p-3 bg-secondary bg-opacity-10 rounded-xl">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-secondary" viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3z"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Graphiques -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- Événements par organisateur -->
+        <div class="bg-white rounded-2xl shadow-md p-6">
+            <h3 class="text-lg font-semibold text-dark mb-4">Événements par organisateur</h3>
+            <canvas id="eventsPerOrganizerChart"></canvas>
+        </div>
+
+        <!-- Événements populaires -->
+        <div class="bg-white rounded-2xl shadow-md p-6">
+            <h3 class="text-lg font-semibold text-dark mb-4">Top 5 événements populaires</h3>
+            <canvas id="popularEventsChart"></canvas>
+        </div>
+
+        <!-- Participants par mois -->
+        <div class="bg-white rounded-2xl shadow-md p-6 lg:col-span-2">
+            <h3 class="text-lg font-semibold text-dark mb-4">Évolution des inscriptions</h3>
+            <canvas id="attendeesOverTimeChart"></canvas>
+        </div>
+    </div>
+</div>
+
+<!-- Scripts pour les graphiques -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Graphique des événements par organisateur
+    new Chart(document.getElementById('eventsPerOrganizerChart'), {
+        type: 'bar',
+        data: {
+            labels: {{ organizer_names | tojson }},
+            datasets: [{
+                label: 'Nombre d\'événements',
+                data: {{ events_per_organizer | tojson }},
+                backgroundColor: '#3D86CB',
+                borderRadius: 8
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        stepSize: 1
+                    }
+                }
+            }
+        }
+    });
+
+    // Graphique des événements populaires
+    new Chart(document.getElementById('popularEventsChart'), {
+        type: 'pie',
+        data: {
+            labels: {{ popular_event_names | tojson }},
+            datasets: [{
+                data: {{ popular_event_counts | tojson }},
+                backgroundColor: ['#3D86CB', '#284D9C', '#82D4E8', '#2A3045', '#A0A0A0']
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                }
+            }
+        }
+    });
+
+    // Graphique de l'évolution des inscriptions
+    new Chart(document.getElementById('attendeesOverTimeChart'), {
+        type: 'line',
+        data: {
+            labels: {{ months | tojson }},
+            datasets: [{
+                label: 'Nombre d\'inscriptions',
+                data: {{ attendees_over_time | tojson }},
+                borderColor: '#3D86CB',
+                backgroundColor: '#3D86CB20',
+                fill: true,
+                tension: 0.3
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        stepSize: 1
+                    }
+                }
+            }
+        }
+    });
+</script>
+{% endblock %}

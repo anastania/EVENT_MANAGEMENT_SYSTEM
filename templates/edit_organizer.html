@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Edit Organizer{% endblock %}
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="max-w-2xl mx-auto">
+        <h1 class="text-3xl font-bold text-dark mb-8">
+            {% if organizer %}Modifier l'organisateur{% else %}Nouvel organisateur{% endif %}
+        </h1>
+
+        <form method="POST" class="bg-white rounded-2xl shadow-md p-6 space-y-6">
+            <div class="space-y-2">
+                <label for="name" class="block text-sm font-medium text-dark">Nom</label>
+                <input type="text" 
+                       name="name" 
+                       id="name" 
+                       value="{{ organizer[1] if organizer else '' }}"
+                       class="w-full px-4 py-2 rounded-xl border border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary focus:ring-opacity-50 transition duration-300"
+                       required>
+            </div>
+
+            <div class="space-y-2">
+                <label for="contact" class="block text-sm font-medium text-dark">Contact</label>
+                <input type="text" 
+                       name="contact" 
+                       id="contact" 
+                       value="{{ organizer[2] if organizer else '' }}"
+                       class="w-full px-4 py-2 rounded-xl border border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary focus:ring-opacity-50 transition duration-300">
+            </div>
+
+            <div class="flex justify-end space-x-4">
+                <a href="{{ url_for('organizers') }}"
+                   class="px-4 py-2 bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-200 transition duration-300">
+                    Annuler
+                </a>
+                <button type="submit"
+                        class="px-4 py-2 bg-primary text-white rounded-xl hover:bg-secondary transition duration-300">
+                    {% if organizer %}Mettre à jour{% else %}Créer{% endif %}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

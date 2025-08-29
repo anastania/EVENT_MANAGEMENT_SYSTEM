@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% block title %}Créer un événement{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
+    <div class="max-w-2xl mx-auto">
+        <h1 class="text-3xl font-bold text-dark mb-8">Créer un nouvel événement</h1>
+
+        <form method="POST" class="bg-white rounded-2xl shadow-md p-6 space-y-6">
+            <div class="space-y-2">
+                <label for="name" class="block text-sm font-medium text-dark">
+                    Nom de l'événement *
+                </label>
+                <input type="text" 
+                       id="name" 
+                       name="name" 
+                       required
+                       class="w-full px-4 py-2 rounded-xl border border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary focus:ring-opacity-50 transition duration-300"
+                       placeholder="Entrez le nom de l'événement">
+            </div>
+
+            <div class="space-y-2">
+                <label for="date" class="block text-sm font-medium text-dark">
+                    Date *
+                </label>
+                <input type="date" 
+                       id="date" 
+                       name="date" 
+                       required
+                       class="w-full px-4 py-2 rounded-xl border border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary focus:ring-opacity-50 transition duration-300">
+            </div>
+
+            <div class="space-y-2">
+                <label for="location" class="block text-sm font-medium text-dark">
+                    Lieu *
+                </label>
+                <input type="text" 
+                       id="location" 
+                       name="location" 
+                       required
+                       class="w-full px-4 py-2 rounded-xl border border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary focus:ring-opacity-50 transition duration-300"
+                       placeholder="Entrez le lieu de l'événement">
+            </div>
+
+            <div class="space-y-2">
+                <label for="organizer_id" class="block text-sm font-medium text-dark">
+                    Organisateur *
+                </label>
+                <select id="organizer_id" 
+                        name="organizer_id" 
+                        required
+                        class="w-full px-4 py-2 rounded-xl border border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary focus:ring-opacity-50 transition duration-300">
+                    <option value="">Sélectionnez un organisateur</option>
+                    {% for organizer in organizers %}
+                    <option value="{{ organizer[0] }}">{{ organizer[1] }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="space-y-2">
+                <label for="description" class="block text-sm font-medium text-dark">
+                    Description
+                </label>
+                <textarea id="description" 
+                          name="description" 
+                          rows="4"
+                          class="w-full px-4 py-2 rounded-xl border border-gray-200 focus:border-primary focus:ring-2 focus:ring-primary focus:ring-opacity-50 transition duration-300"
+                          placeholder="Décrivez votre événement (optionnel)"></textarea>
+            </div>
+
+            <div class="flex justify-end space-x-4">
+                <a href="{{ url_for('events') }}"
+                   class="px-4 py-2 bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-200 transition duration-300">
+                    Annuler
+                </a>
+                <button type="submit"
+                        class="px-4 py-2 bg-primary text-white rounded-xl hover:bg-secondary transition duration-300">
+                    Créer l'événement
+                </button>
+            </div>
+
+            <p class="text-sm text-neutral mt-4">* Champs obligatoires</p>
+        </form>
+    </div>
+</div>
+{% endblock %}
