@@ -71,6 +71,24 @@
                         </a>
                     </div>
                 </div>
+
+                <!-- ADDED: auth buttons (connexion / déconnexion) -->
+                <div class="flex items-center space-x-4">
+                    {% if current_user.is_authenticated %}
+                        <span class="text-gray-600 font-medium">{{ current_user.username }}</span>
+                        <a href="{{ url_for('logout') }}"
+                           class="px-3 py-2 bg-primary text-white rounded-md hover:bg-secondary transition">
+                            Déconnexion
+                        </a>
+                    {% else %}
+                        <a href="{{ url_for('login') }}"
+                           class="px-3 py-2 bg-primary text-white rounded-md hover:bg-secondary transition">
+                            Connexion
+                        </a>
+                    {% endif %}
+                </div>
+                <!-- END ADDED -->
+
             </div>
         </div>
     </nav>
